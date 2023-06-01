@@ -1,5 +1,6 @@
 const path = require('path');
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
@@ -14,6 +15,19 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
+app.use(
+  cors({
+    origin: [
+      'http://localhost:3001',
+      'http://alex.rgb.yandex.nomoredomains.rocks',
+      'https://alex.rgb.yandex.nomoredomains.rocks',
+    ],
+    credentials: true,
+    maxAge: 60,
+  }),
+);
+
 app.use(helmet());
 
 app.use(express.static(path.join(__dirname, 'public')));
