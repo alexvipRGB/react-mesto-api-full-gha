@@ -2,20 +2,14 @@
   "name": "express-mesto-gha",
   "version": "1.0.0",
   "main": "app.js",
-  "description": "[![Tests](../../actions/workflows/tests-13-sprint.yml/badge.svg)](../../actions/workflows/tests-13-sprint.yml) [![Tests](../../actions/workflows/tests-14-sprint.yml/badge.svg)](../../actions/workflows/tests-14-sprint.yml) # Проект Mesto фронтенд + бэкенд",
   "scripts": {
     "lint": "npx eslint .",
     "start": "node app.js",
     "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/alexvipRGB/express-mesto-gha.git"
-  },
   "author": "",
   "license": "ISC",
-  "homepage": "https://github.com/alexvipRGB/express-mesto-gha#readme",
   "devDependencies": {
     "eslint": "^8.39.0",
     "eslint-config-airbnb-base": "^15.0.0",
