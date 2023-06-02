@@ -1,21 +1,26 @@
+const { NODE_ENV, JWT_SECRET } = process.env;
 const jwt = require('jsonwebtoken');
 const UnauthorizedError = require('../errors/UnauthorizedError');
+const secretKey = require('../utils/secretKey');
 
 const authMiddleware = (req, res, next) => {
   const token = req.cookies.jwt;
-
+  let payload;
   if (!token) {
     next(new UnauthorizedError('Необходима авторизация'));
   }
 
   try {
-    req.user = jwt.verify(token, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMzQ1Njc4OTAifQ._aG0ukzancZqhL1wvBTJh8G8d3Det5n0WKcPo5C0DCY');
-
-    next();
+    payload = jwt.verify(
+      token,
+      NODE_ENV === 'production' ? JWT_SECRET : secretKey,
+    );
   } catch (err) {
-    next(new UnauthorizedError('Необходима авторизация'));
+    return next(new UnauthorizedError('Необходима авторизация'));
   }
-  return null;
+  req.user = payload;
+
+  return next();
 };
 
 module.exports = authMiddleware;
