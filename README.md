@@ -8,8 +8,8 @@
 
 ## Ссылки на проект
 
-IP-адрес 158.160.21.100
+IP 158.160.21.100
 
-Frontend https://alex.rgb.yandex.nomoredomains.rocks
+Frontend http://alex.rgb.yandex.nomoredomains.rocks/
 
-Backend https://api.mesto.alex.nomoredomains.rocks
+Backend http://api.mesto.alex.nomoredomains.rocks
