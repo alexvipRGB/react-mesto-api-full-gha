@@ -56,8 +56,7 @@ function App() {
   function handleLogin(email, password) {
     auth.loginUser(email, password)
       .then((res) => {
-        if (res.token) {
-          localStorage.setItem("token", res.token);
+        if (res) {
           setLoggedIn(true);
           setPopupImage(resolve);
           setEmail(email);
@@ -260,7 +259,7 @@ function App() {
       document.removeEventListener("keydown", handleEscClose);
     };
   }, [isOpen]);
-  
+
   return (
     <div className="page">
       <div className="page__container">
@@ -345,7 +344,7 @@ function App() {
           <InfoToolTip
             image={popupImage}
             title={popupTitle}
-            isOpen={infoTooltip} 
+            isOpen={infoTooltip}
             onClose={closeAllPopups}
           />
         </CurrentUserContext.Provider>
