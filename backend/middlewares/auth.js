@@ -16,11 +16,11 @@ const authMiddleware = (req, res, next) => {
       NODE_ENV === 'production' ? JWT_SECRET : secretKey,
     );
   } catch (err) {
-    return next(new UnauthorizedError('Необходима авторизация'));
+    next(new UnauthorizedError('Необходима авторизация'));
   }
   req.user = payload;
 
-  return next();
+  next();
 };
 
 module.exports = authMiddleware;

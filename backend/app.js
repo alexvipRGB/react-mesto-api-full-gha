@@ -29,12 +29,14 @@ app.use(
     maxAge: 60,
   }),
 );
-app.use(requestLogger);
+
 app.use(helmet());
 
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
+
+app.use(requestLogger);
 
 app.use(bodyParser.json());
 app.use(router);
