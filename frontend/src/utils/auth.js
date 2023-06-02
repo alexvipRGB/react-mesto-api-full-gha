@@ -29,6 +29,7 @@ class Auth {
           headers: {
               'Content-Type': 'application/json',
           },
+          credentials: "include",
           body: JSON.stringify({ email, password }),
       })
           .then(this._handleResponse)
@@ -38,16 +39,17 @@ class Auth {
       return fetch(`${this._url}/users/me`, {
           method: 'GET',
           headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+            "Content-Type": "application/json",
           },
+          credentials: "include",
       })
           .then(this._handleResponse)
   }
 }
 
 const auth = new Auth({
-  url: 'https://auth.nomoreparties.co',
+  url: 'https://api.mesto.alex.nomoredomains.rocks',
 });
 
 export default auth;
