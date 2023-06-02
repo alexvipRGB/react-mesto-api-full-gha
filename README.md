@@ -4,12 +4,12 @@
   
 Пожалуйста, прикрепите в это описание ссылку на сайт, размещенный на Яндекс.Облаке.
 
-Адрес репозитория: https://github.com/...
+Адрес репозитория: https://github.com/alexvipRGB/react-mesto-api-full-gha/
 
 ## Ссылки на проект
 
-IP-адрес x.x.x.x
+IP-адрес 158.160.21.100
 
-Frontend https://...
+Frontend https://alex.rgb.yandex.nomoredomains.rocks
 
-Backend https://...
+Backend https://api.mesto.alex.nomoredomains.rocks
