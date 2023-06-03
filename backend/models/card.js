@@ -10,6 +10,7 @@ const cardSchema = new mongoose.Schema({
   link: {
     type: String,
     required: [true, 'Поле "link" должно быть заполнено'],
+    minlength: [5, 'Минимальная длина поля "name" - 5'],
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
