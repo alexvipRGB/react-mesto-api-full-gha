@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const urlValid = require('../utils/urlValid');
+
 const cardSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -10,7 +12,10 @@ const cardSchema = new mongoose.Schema({
   link: {
     type: String,
     required: [true, 'Поле "link" должно быть заполнено'],
-    minlength: [5, 'Минимальная длина поля "name" - 5'],
+    validate: {
+      validator: (url) => urlValid.test(url),
+      message: 'Incorrect link format',
+    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,

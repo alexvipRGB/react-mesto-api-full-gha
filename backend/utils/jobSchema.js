@@ -11,7 +11,7 @@ const cardBodyValid = {
         'string.max': 'Максимальная длина поля "name" - 30',
         'any.required': 'Поле "name" должно быть заполнено',
       }),
-    link: Joi.string()
+    link: Joi.string().required().min(5)
       .custom((value, helpers) => {
         if (!validUrl.isWebUri(value)) {
           return helpers.error('any.invalid');
@@ -22,6 +22,7 @@ const cardBodyValid = {
         'string.base': 'Поле "link" должно быть строкой',
         'string.empty': 'Поле "link" должно быть заполнено',
         'any.required': 'Поле "link" должно быть заполнено',
+        'string.min': 'Минимальная длина поля "link" - 5',
         'string.uri': 'Поле "link" должно быть допустимым URL-адресом',
       })
       .required(),
@@ -47,6 +48,7 @@ const userLoginValid = {
       'string.base': 'Поле "email" должно быть строкой',
       'string.empty': 'Поле "email" должно быть заполнено',
       'string.email': 'Некорректный Email',
+      'string.min': 'Минимальная длина поля "email" - 2',
       'any.required': 'Поле "email" должно быть заполнено',
     }),
     password: Joi.string().min(8).required().messages({
@@ -98,6 +100,7 @@ const userCreateValid = {
         'string.empty': 'Поле "avatar" должно быть заполнено',
         'any.required': 'Поле "avatar" должно быть заполнено',
         'string.uri': 'Поле "avatar" должно быть допустимым URL-адресом',
+        'string.min': 'Минимальная длина поля "about" - 2',
       }),
   }),
 };

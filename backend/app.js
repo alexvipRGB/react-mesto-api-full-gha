@@ -33,7 +33,6 @@ app.use(helmet());
 
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-
 app.use(requestLogger);
 
 app.use(bodyParser.json());
@@ -46,8 +45,7 @@ app.get('/crash-test', () => {
 
 app.use(router);
 app.use(errorLogger);
-
-app.use(validationErrors);
 app.use(errors());
+app.use(validationErrors);
 
 app.listen(PORT);

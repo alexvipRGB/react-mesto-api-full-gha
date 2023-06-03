@@ -1,36 +1,41 @@
-const { NODE_ENV, JWT_SECRET } = process.env;
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const validationErrors = require('../utils/validError');
 const ConflictError = require('../errors/ConflictError');
 const NotFoundError = require('../errors/NotFoundError');
 const UnauthorizedError = require('../errors/UnauthorizedError');
-const BadRequestError = require('../errors/BadRequestError');
 const secretKey = require('../utils/secretKey');
+const { getUser, updateUserField } = require('../utils/userErr');
 
-const getUsers = async (req, res) => {
+const { NODE_ENV } = process.env;
+const JWT_SECRET = process.env.REACT_APP_JWT_SECRET;
+
+const getUsers = async (req, res, next) => {
   try {
     const users = await User.find({});
     res.send(users);
   } catch (err) {
-    validationErrors(res);
+    next(err);
+  }
+};
+
+const getCurrentUser = async (req, res, next) => {
+  try {
+    await getUser(res, next, req.user._id);
+  } catch (err) {
+    next(err);
   }
 };
 
 const getUserById = async (req, res, next) => {
   try {
-    const user = await User.findById(req.params.userId);
-    if (!user) {
-      next(new NotFoundError('Пользователь не найден'));
-      return;
-    }
-
-    res.send(user);
+    const { userId } = req.params;
+    await getUser(res, next, userId);
   } catch (err) {
-    validationErrors(res);
+    next(err);
   }
 };
+
 const createUser = async (req, res, next) => {
   try {
     const {
@@ -44,7 +49,9 @@ const createUser = async (req, res, next) => {
       email,
       password: hashedPassword,
     });
-    if (user) {
+    if (!user) {
+      throw new NotFoundError('Пользователь не создан');
+    } else {
       res.status(201).send({
         name,
         about,
@@ -54,12 +61,10 @@ const createUser = async (req, res, next) => {
     }
   } catch (err) {
     if (err.code === 11000) {
-      next(new ConflictError('Email уже используется'));
-      if (err.name === 'ValidationErrors') {
-        next(new BadRequestError('Переданы некорректные данные при создании пользователя.'));
-      } else {
-        next(err);
-      }
+      const conflictError = new ConflictError('Email уже используется');
+      next(conflictError);
+    } else {
+      next(err);
     }
   }
 };
@@ -67,36 +72,20 @@ const createUser = async (req, res, next) => {
 const updateUser = async (req, res, next) => {
   try {
     const { name, about } = req.body;
-    const user = await User.findByIdAndUpdate(
-      req.user._id,
-      { name, about },
-      { new: true, runValidators: true },
-    );
-    if (!user) {
-      next(new NotFoundError('Пользователь не найден'));
-      return;
-    }
-    res.send(user);
+    const updateData = { name, about };
+    await updateUserField(req, res, next, updateData, 'Пользователь не обновлен');
   } catch (err) {
-    validationErrors(res);
+    next(err);
   }
 };
 
 const updateUserAvatar = async (req, res, next) => {
   try {
     const { avatar } = req.body;
-    const user = await User.findByIdAndUpdate(
-      req.user._id,
-      { avatar },
-      { new: true, runValidators: true },
-    );
-    if (!user) {
-      next(new NotFoundError('Пользователь не найден'));
-      return;
-    }
-    res.send(user);
+    const updateData = { avatar };
+    await updateUserField(req, res, next, updateData, 'Аватар не обновлен');
   } catch (err) {
-    validationErrors(res);
+    next(err);
   }
 };
 
@@ -106,43 +95,34 @@ const login = async (req, res, next) => {
     const user = await User.findOne({ email }).select('+password');
 
     if (!user || !bcrypt.compareSync(password, user.password)) {
-      next(new UnauthorizedError('Неправильная почта или пароль'));
-      return;
+      throw new UnauthorizedError('Неправильная почта или пароль');
     }
 
     const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : secretKey, {
       expiresIn: '7d',
     });
 
-    res.cookie('jwt', token, {
+    const cookieOptions = {
       httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+      maxAge: 15 * 60 * 1000,
+    };
+
+    res.cookie('jwt', token, cookieOptions);
 
     res.send({ message: 'Успешная аутентификация' });
   } catch (err) {
-    if (err.name === 'ValidationErrors') {
-      next(new UnauthorizedError('Неправильная почта или пароль'));
-    } else {
-      next(err);
-    }
+    next(err);
   }
 };
 
-const getCurrentUser = async (req, res, next) => {
+const logout = async (req, res, next) => {
   try {
-    const user = await User.findById(req.user._id);
-    if (!user) {
-      next(new NotFoundError('Пользователь не найден'));
-      return;
-    }
-
-    res.send(user);
+    res.clearCookie('jwt').send({ message: 'Кук успешно удален.' });
   } catch (err) {
-    validationErrors(res);
+    next(err);
   }
 };
 
 module.exports = {
-  getUsers, getUserById, createUser, updateUser, updateUserAvatar, login, getCurrentUser,
+  getUsers, getUserById, createUser, updateUser, updateUserAvatar, login, logout, getCurrentUser,
 };
