@@ -19,7 +19,7 @@ const authMiddleware = (req, res, next) => {
     next();
   } catch (err) {
     const unauthorizedError = new UnauthorizedError('Токен недействителен');
-    return next(unauthorizedError);
+    next(unauthorizedError);
   }
 };
 
