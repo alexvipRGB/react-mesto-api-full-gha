@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+// eslint-disable-next-line import/no-extraneous-dependencies
 require('dotenv').config();
 const UnauthorizedError = require('../errors/UnauthorizedError');
 const jwtKey = require('../utils/secretKey');
