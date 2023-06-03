@@ -30,7 +30,7 @@ const deleteCard = async (req, res, next) => {
     const { cardId } = req.params;
     const userId = req.user._id;
 
-    const card = await Card.findById(cardId);
+    const card = await Card.findByIdAndRemove(cardId);
 
     if (!card) {
       throw new NotFoundError('Нет карточки с таким id');
@@ -40,7 +40,7 @@ const deleteCard = async (req, res, next) => {
       throw new ForbiddenError('У вас нет прав на удаление этой карточки');
     }
 
-    await card.deleteOne();
+    await card.findByIdAndRemove();
 
     res.send({ message: 'Карточка успешно удалена' });
   } catch (err) {
