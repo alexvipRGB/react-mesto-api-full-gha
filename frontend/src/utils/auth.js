@@ -11,6 +11,7 @@ class Auth {
       return Promise.reject(`Ошибка: ${res.status}`);
     }
   }
+
   registerUser(email, password) {
     return fetch(`${this._url}/signup`, {
       method: 'POST',
@@ -37,13 +38,13 @@ class Auth {
   getToken(token) {
     return fetch(`${this._url}/users/me`, {
       method: 'GET',
+      credentials: "include",
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json",
+       "Content-Type": "application/json",
       },
-      credentials: "include",
     })
-      .then(this._handleResponse)
+    .then(this._handleResponse)
   }
 }
 

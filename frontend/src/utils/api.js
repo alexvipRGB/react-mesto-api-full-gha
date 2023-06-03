@@ -9,12 +9,11 @@ class Api {
       ? response.json()
       : Promise.reject(`${method}: ${response.status}`);
   }
-  _request(url, options) {
-    return fetch(url, options).then(this._checkResponse)
-  }
+  
   getUserInfo() {
     return fetch(`${this._baseUrl}/users/me`, { headers: this._headers, credentials: "include"}).then(
-      (res) => this._checkResponse(res, "getUserInfo"));
+      (res) => this._checkResponse(res, "getUserInfo"),
+      );
   }
 
   setAvatar(avatarURL) {
@@ -42,7 +41,8 @@ class Api {
 
   getInitialCards() {
     return fetch(`${this._baseUrl}/cards`, { headers: this._headers, credentials: "include"}).then(
-      (res) => this._checkResponse(res, "getInitialCards"));
+      (res) => this._checkResponse(res, "getInitialCards"),
+      );
   }
 
   changeLikeCardStatus(id, status) {

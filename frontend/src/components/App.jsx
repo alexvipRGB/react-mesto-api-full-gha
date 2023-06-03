@@ -56,7 +56,8 @@ function App() {
   function handleLogin(email, password) {
     auth.loginUser(email, password)
       .then((res) => {
-        if (res) {
+        if (res && typeof res === "object") {
+          localStorage.getItem("token", res.token);
           setLoggedIn(true);
           setPopupImage(resolve);
           setEmail(email);
