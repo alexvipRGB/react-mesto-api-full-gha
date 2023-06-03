@@ -1,11 +1,10 @@
 const jwt = require('jsonwebtoken');
-// eslint-disable-next-line import/no-extraneous-dependencies
 require('dotenv').config();
 const UnauthorizedError = require('../errors/UnauthorizedError');
 const jwtKey = require('../utils/secretKey');
 
 const { NODE_ENV } = process.env;
-const JWT_SECRET_KEY = process.env.REACT_APP_JWT_SECRET;
+const JWT_SECRET = process.env.REACT_APP_JWT_SECRET;
 
 const authMiddleware = (req, res, next) => {
   try {
@@ -15,7 +14,7 @@ const authMiddleware = (req, res, next) => {
       throw new UnauthorizedError('Токен отсутствует');
     }
 
-    req.user = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET_KEY : jwtKey);
+    req.user = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : jwtKey);
 
     next();
   } catch (err) {
