@@ -40,9 +40,10 @@ const deleteCard = async (req, res, next) => {
       throw new ForbiddenError('У вас нет прав на удаление этой карточки');
     }
 
-    await card.findByIdAndRemove();
+    await card.findByIdAndRemove(cardId);
 
     res.send({ message: 'Карточка успешно удалена' });
+    return;
   } catch (err) {
     next(err);
   }

@@ -5,7 +5,6 @@ const ConflictError = require('../errors/ConflictError');
 const NotFoundError = require('../errors/NotFoundError');
 const UnauthorizedError = require('../errors/UnauthorizedError');
 const secretKey = require('../utils/secretKey');
-const { getUser, updateUserField } = require('../utils/userErr');
 
 const { NODE_ENV } = process.env;
 const JWT_SECRET = process.env.REACT_APP_JWT_SECRET;
@@ -21,7 +20,12 @@ const getUsers = async (req, res, next) => {
 
 const getCurrentUser = async (req, res, next) => {
   try {
-    await getUser(res, next, req.user._id);
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      throw new NotFoundError('Пользователь не найден');
+    }
+
+    res.send(user);
   } catch (err) {
     next(err);
   }
@@ -29,8 +33,11 @@ const getCurrentUser = async (req, res, next) => {
 
 const getUserById = async (req, res, next) => {
   try {
-    const { userId } = req.params;
-    await getUser(res, next, userId);
+    const user = await User.findById(req.params.userId);
+    if (!user) {
+      throw new NotFoundError('Пользователь не найден');
+    }
+    res.send(user);
   } catch (err) {
     next(err);
   }
@@ -49,9 +56,7 @@ const createUser = async (req, res, next) => {
       email,
       password: hashedPassword,
     });
-    if (!user) {
-      throw new NotFoundError('Пользователь не создан');
-    } else {
+    if (user) {
       res.status(201).send({
         name,
         about,
@@ -72,8 +77,15 @@ const createUser = async (req, res, next) => {
 const updateUser = async (req, res, next) => {
   try {
     const { name, about } = req.body;
-    const updateData = { name, about };
-    await updateUserField(req, res, next, updateData, 'Пользователь не обновлен');
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { name, about },
+      { new: true, runValidators: true },
+    );
+    if (!user) {
+      throw new NotFoundError('Пользователь не найден');
+    }
+    res.send(user);
   } catch (err) {
     next(err);
   }
@@ -82,8 +94,15 @@ const updateUser = async (req, res, next) => {
 const updateUserAvatar = async (req, res, next) => {
   try {
     const { avatar } = req.body;
-    const updateData = { avatar };
-    await updateUserField(req, res, next, updateData, 'Аватар не обновлен');
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { avatar },
+      { new: true, runValidators: true },
+    );
+    if (!user) {
+      throw new NotFoundError('Пользователь не найден');
+    }
+    res.send(user);
   } catch (err) {
     next(err);
   }
@@ -102,12 +121,10 @@ const login = async (req, res, next) => {
       expiresIn: '7d',
     });
 
-    const cookieOptions = {
+    res.cookie('jwt', token, {
       httpOnly: true,
-      maxAge: 15 * 60 * 1000,
-    };
-
-    res.cookie('jwt', token, cookieOptions);
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
 
     res.send({ message: 'Успешная аутентификация' });
   } catch (err) {
