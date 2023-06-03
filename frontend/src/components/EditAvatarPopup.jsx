@@ -66,14 +66,13 @@ function EditAvatarPopup(props) {
         name={"inputAvatarUrl"}
         placeholder={"Ссылка на картинку"}
         min={"2"}
-        max={"40"}
         params={avatar || ""}
         handleChange={handleChangeAvatar}
         validationInput={firstInputDirty}
         validationError={firstInputError}
         checkBlur={props.blurHandler}
         dirty={setFirstInputDirty}
-        error={setFirstInputError} 
+        error={setFirstInputError}
       />
     </PopupWithForm>
   );

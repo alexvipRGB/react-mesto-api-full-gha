@@ -7,7 +7,6 @@ import Main from './Main';
 import Footer from './Footer';
 import ImagePopup from './ImagePopup';
 import api from '../utils/api.js';
-import auth from '../utils/auth';
 import ConfirmDeletePopup from "./ConfirmDeletePopup";
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import EditProfilePopup from './EditProfilePopup';
@@ -18,6 +17,7 @@ import Login from './Login';
 import InfoToolTip from './InfoTooltip';
 import resolve from "../images/resolve.png";
 import reject from "../images/reject.png";
+import auth from '../utils/auth';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -94,7 +94,7 @@ function App() {
     tokenCheck();
   }, [loggedIn]);
 
-  function handleSingOut() {
+  function signOut() {
     setLoggedIn(false);
     localStorage.removeItem('token');
   }
@@ -286,7 +286,7 @@ function App() {
                 <Header
                   title='Выйти'
                   email={email}
-                  onClick={handleSingOut}
+                  onClick={signOut}
                   route=""
                 />
                 <ProtectedRoute

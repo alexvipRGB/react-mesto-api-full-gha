@@ -13,11 +13,8 @@ class Api {
     return fetch(url, options).then(this._checkResponse)
   }
   getUserInfo() {
-    return fetch(`${this._baseUrl}/users/me`, { headers: this._headers }).then(
-      (res) => {
-        return this._checkResponse(res, "getUserInfo");
-      }
-    );
+    return fetch(`${this._baseUrl}/users/me`, { headers: this._headers, credentials: "include"}).then(
+      (res) => this._checkResponse(res, "getUserInfo"));
   }
 
   setAvatar(avatarURL) {
@@ -28,9 +25,7 @@ class Api {
       body: JSON.stringify({
         avatar: avatarURL,
       }),
-    }).then((res) => {
-      return this._checkResponse(res, "setAvatar");
-    });
+    }).then((res) => this._checkResponse(res, "setAvatar"));
   }
 
   setUserInfo(name, about) {
@@ -42,17 +37,12 @@ class Api {
         name: name,
         about: about,
       }),
-    }).then((res) => {
-      return this._checkResponse(res, "setUserInfo");
-    });
+    }).then((res) => this._checkResponse(res, "setUserInfo"));
   }
 
   getInitialCards() {
-    return fetch(`${this._baseUrl}/cards`, { headers: this._headers }).then(
-      (res) => {
-        return this._checkResponse(res, "getInitialCards");
-      }
-    );
+    return fetch(`${this._baseUrl}/cards`, { headers: this._headers, credentials: "include"}).then(
+      (res) => this._checkResponse(res, "getInitialCards"));
   }
 
   changeLikeCardStatus(id, status) {
@@ -61,39 +51,31 @@ class Api {
         method: "DELETE",
         credentials: "include",
         headers: this._headers,
-      }).then((res) => {
-        return this._checkResponse(res, "removeLike");
-      });
+      }).then((res) => this._checkResponse(res, "removeLike"));
     } else {
       return fetch(`${this._baseUrl}/cards/${id}/likes`, {
-        headers: this._headers,
         credentials: "include",
+        headers: this._headers,
         method: "PUT",
-      }).then((res) => {
-        return this._checkResponse(res, "addLike");
-      });
+      }).then((res) => this._checkResponse(res, "addLike"));
     }
   }
 
   addCard(card) {
     return fetch(`${this._baseUrl}/cards`, {
       method: "POST",
-      headers: this._headers,
       credentials: "include",
+      headers: this._headers,
       body: JSON.stringify(card),
-    }).then((res) => {
-      return this._checkResponse(res, "addCard");
-    });
+    }).then((res) =>this._checkResponse(res, "addCard"));
   }
 
   removeCard(id) {
     return fetch(`${this._baseUrl}/cards/${id}`, {
       method: "DELETE",
-      headers: this._headers,
       credentials: "include",
-    }).then((res) => {
-      return this._checkResponse(res, "removeCard");
-    });
+      headers: this._headers,
+    }).then((res) => this._checkResponse(res, "removeCard"));
   }
 }
 
