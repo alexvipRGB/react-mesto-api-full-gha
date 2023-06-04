@@ -6,8 +6,7 @@ const NotFoundError = require('../errors/NotFoundError');
 const UnauthorizedError = require('../errors/UnauthorizedError');
 const secretKey = require('../utils/secretKey');
 
-const { NODE_ENV } = process.env;
-const JWT_SECRET = process.env.REACT_APP_JWT_SECRET;
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 const getUsers = async (req, res, next) => {
   try {
