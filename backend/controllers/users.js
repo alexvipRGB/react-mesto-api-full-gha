@@ -1,30 +1,17 @@
+const { NODE_ENV, JWT_SECRET } = process.env;
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const ConflictError = require('../errors/ConflictError');
 const NotFoundError = require('../errors/NotFoundError');
 const UnauthorizedError = require('../errors/UnauthorizedError');
+const BadRequestError = require('../errors/BadRequestError');
 const secretKey = require('../utils/secretKey');
-
-const { NODE_ENV, JWT_SECRET } = process.env;
 
 const getUsers = async (req, res, next) => {
   try {
     const users = await User.find({});
     res.send(users);
-  } catch (err) {
-    next(err);
-  }
-};
-
-const getCurrentUser = async (req, res, next) => {
-  try {
-    const user = await User.findById(req.user._id);
-    if (!user) {
-      throw new NotFoundError('Пользователь не найден');
-    }
-
-    res.send(user);
   } catch (err) {
     next(err);
   }
@@ -131,6 +118,19 @@ const login = async (req, res, next) => {
   }
 };
 
+const getCurrentUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      throw new NotFoundError('Пользователь не найден');
+    }
+
+    res.send(user);
+  } catch (err) {
+    next(err);
+  }
+};
+
 const logout = async (req, res, next) => {
   try {
     res.clearCookie('jwt').send({ message: 'Кук успешно удален.' });
@@ -140,5 +140,5 @@ const logout = async (req, res, next) => {
 };
 
 module.exports = {
-  getUsers, getUserById, createUser, updateUser, updateUserAvatar, login, logout, getCurrentUser,
+  getUsers, getUserById, createUser, updateUser, updateUserAvatar, login, getCurrentUser, logout,
 };

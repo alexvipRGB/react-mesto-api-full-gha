@@ -57,7 +57,7 @@ const addLike = async (req, res, next) => {
       { new: true },
     );
     if (!card) {
-      throw new NotFoundError('Нет карточки с таким id');
+      throw new NotFoundError('Карточка не найдена');
     }
 
     res.send(card);
@@ -74,7 +74,7 @@ const removeLike = async (req, res, next) => {
       { new: true },
     );
     if (!card) {
-      throw new NotFoundError('Нет карточки с таким id');
+      throw new NotFoundError('Карточка не найдена');
     }
 
     res.send(card);
