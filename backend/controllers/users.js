@@ -5,7 +5,6 @@ const User = require('../models/user');
 const ConflictError = require('../errors/ConflictError');
 const NotFoundError = require('../errors/NotFoundError');
 const UnauthorizedError = require('../errors/UnauthorizedError');
-const BadRequestError = require('../errors/BadRequestError');
 const secretKey = require('../utils/secretKey');
 
 const getUsers = async (req, res, next) => {
