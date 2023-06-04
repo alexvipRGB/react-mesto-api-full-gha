@@ -5,7 +5,7 @@ const User = require('../models/user');
 const ConflictError = require('../errors/ConflictError');
 const NotFoundError = require('../errors/NotFoundError');
 const UnauthorizedError = require('../errors/UnauthorizedError');
-const secretKey = require('../utils/secretKey');
+const jwtKey = require('../utils/secretKey');
 
 const getUsers = async (req, res, next) => {
   try {
@@ -102,7 +102,7 @@ const login = async (req, res, next) => {
       throw new UnauthorizedError('Неправильная почта или пароль');
     }
 
-    const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : secretKey, {
+    const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : jwtKey, {
       expiresIn: '7d',
     });
 
