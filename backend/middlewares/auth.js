@@ -7,20 +7,21 @@ const { NODE_ENV } = process.env;
 const JWT_SECRET = process.env.REACT_APP_JWT_SECRET;
 
 const authMiddleware = (req, res, next) => {
+  const token = req.cookies.jwt;
+  let payload;
   try {
-    const token = req.cookies.jwt;
-
     if (!token) {
       throw new UnauthorizedError('Токен отсутствует');
     }
 
-    req.user = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : jwtKey);
-
-    next();
+    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : jwtKey);
   } catch (err) {
     const unauthorizedError = new UnauthorizedError('Токен недействителен');
     next(unauthorizedError);
   }
+  req.user = payload;
+
+  next();
 };
 
 module.exports = authMiddleware;
