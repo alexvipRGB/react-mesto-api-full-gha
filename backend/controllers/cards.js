@@ -33,7 +33,7 @@ const deleteCard = async (req, res, next) => {
     const card = await Card.findByIdAndRemove(cardId);
 
     if (!card) {
-      throw new NotFoundError('Нет карточки с таким id');
+      throw new NotFoundError('Карточка не найдена');
     }
 
     if (card.owner.toString() !== userId) {
@@ -42,7 +42,7 @@ const deleteCard = async (req, res, next) => {
 
     await card.findByIdAndRemove(cardId);
 
-    res.send({ message: 'Карточка успешно удалена' });
+    res.status(200).send({ message: 'Карточка успешно удалена' });
   } catch (err) {
     next(err);
   }
