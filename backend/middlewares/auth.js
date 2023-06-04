@@ -1,10 +1,8 @@
+const { NODE_ENV, JWT_SECRET } = process.env;
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const UnauthorizedError = require('../errors/UnauthorizedError');
 const jwtKey = require('../utils/secretKey');
-
-const { NODE_ENV } = process.env;
-const JWT_SECRET = process.env.REACT_APP_JWT_SECRET;
 
 const authMiddleware = (req, res, next) => {
   const token = req.cookies.jwt;
