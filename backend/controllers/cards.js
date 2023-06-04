@@ -43,6 +43,7 @@ const deleteCard = async (req, res, next) => {
     await card.findByIdAndRemove(cardId);
 
     res.send({ message: 'Карточка успешно удалена' });
+    return;
   } catch (err) {
     next(err);
   }
