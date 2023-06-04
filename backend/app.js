@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const { errors } = require('celebrate');
-const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
@@ -36,7 +35,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(requestLogger);
 
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(router);
 app.use(errorLogger);
 
