@@ -22,27 +22,27 @@ class Api {
     );
   }
 
-  setAvatar(data) {
+  setAvatar(avatarURL) {
     return fetch(`${this._baseUrl}/users/me/avatar`, {
       headers: this._headers,
-      credentials: "include",
       method: "PATCH",
+      credentials: "include",
       body: JSON.stringify({
-        avatar: data.avatar,
+        avatar: avatarURL,
       }),
     }).then((res) => {
       return this._checkResponse(res, "setAvatar");
     });
   }
 
-  setUserInfo(data) {
+  setUserInfo(name, about) {
     return fetch(`${this._baseUrl}/users/me`, {
       headers: this._headers,
-      credentials: "include",
       method: "PATCH",
+      credentials: "include",
       body: JSON.stringify({
-        name: data.name,
-        about: data.about,
+        name: name,
+        about: about,
       }),
     }).then((res) => {
       return this._checkResponse(res, "setUserInfo");

@@ -56,6 +56,7 @@ function App() {
     auth.loginUser(email, password)
       .then((res) => {
         if (res) {
+          window.location.reload();
           localStorage.setItem("token", res);
           setLoggedIn(true);
           setPopupImage(resolve);
@@ -97,7 +98,7 @@ function App() {
   function signOut() {
     setLoggedIn(false);
     localStorage.removeItem('token');
-    setEmail("");
+    window.location.reload();
   }
 
   const blurHandler = (e, paramsDirty, paramsError) => {
@@ -300,6 +301,7 @@ function App() {
                   onCardClick={handleCardClick}
                   onCardLike={handleCardLike}
                   onCardDelete={handleCardDeleteClick}
+
                 />
                 <Footer />
               </>
