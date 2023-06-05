@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Route, Routes, useNavigate, Navigate } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute';
@@ -56,8 +55,8 @@ function App() {
   function handleLogin(email, password) {
     auth.loginUser(email, password)
       .then((res) => {
-        if (res && typeof res === "object") {
-          localStorage.getItem("token", res.token);
+        if (res) {
+          localStorage.setItem("token", res);
           setLoggedIn(true);
           setPopupImage(resolve);
           setEmail(email);
@@ -81,7 +80,7 @@ function App() {
         .then((res) => {
           if (res) {
             setLoggedIn(true);
-            setEmail(res.data.email);
+            setEmail(res.email);
             navigate("/");
           }
         })
@@ -164,7 +163,7 @@ function App() {
   };
 
   function handleCardLike(card) {
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.some((i) => i === currentUser._id);
 
     api
       .changeLikeCardStatus(card._id, isLiked)

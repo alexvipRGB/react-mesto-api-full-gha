@@ -7,9 +7,9 @@ class Auth {
   _handleResponse(res) {
     if (res.ok) {
       return res.json();
-    } else {
-      return Promise.reject(`Ошибка: ${res.status}`);
     }
+
+    return Promise.reject(`Ошибка: ${res.status}`);
   }
 
   registerUser(email, password) {
@@ -26,10 +26,11 @@ class Auth {
   loginUser(email, password) {
     return fetch(`${this._url}/signin`, {
       method: 'POST',
+      credentials: "include",
       headers: {
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-      credentials: "include",
       body: JSON.stringify({ email, password }),
     })
       .then(this._handleResponse)
@@ -40,13 +41,28 @@ class Auth {
       method: 'GET',
       credentials: "include",
       headers: {
-        Accept: "application/json",
-       "Content-Type": "application/json",
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
     })
-    .then(this._handleResponse)
+      .then(this._handleResponse)
   }
+
+  logout() {
+  return fetch(`${this._url}/signout`, {
+    method: 'GET',
+    credentials: "include",
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+  })
+  .then(this._handleResponse)
 }
+}
+
+
 
 const auth = new Auth({
   url: 'https://api.mesto.alex.nomoredomains.rocks',
