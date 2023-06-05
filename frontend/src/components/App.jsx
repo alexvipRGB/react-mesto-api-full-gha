@@ -97,6 +97,7 @@ function App() {
   function signOut() {
     setLoggedIn(false);
     localStorage.removeItem('token');
+    setEmail("");
   }
 
   const blurHandler = (e, paramsDirty, paramsError) => {

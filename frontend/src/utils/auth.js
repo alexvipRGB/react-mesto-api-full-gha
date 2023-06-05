@@ -48,18 +48,6 @@ class Auth {
     })
       .then(this._handleResponse)
   }
-
-  logout() {
-  return fetch(`${this._url}/signout`, {
-    method: 'GET',
-    credentials: "include",
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
-  })
-  .then(this._handleResponse)
-}
 }
 
 
