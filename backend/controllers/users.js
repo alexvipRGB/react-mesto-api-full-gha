@@ -106,7 +106,6 @@ const login = async (req, res, next) => {
     });
 
     res.send({ token });
-    console.log(jwt, 'look at where you are look at where you started');
   } catch (err) {
     next(err);
   }
