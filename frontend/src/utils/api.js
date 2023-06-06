@@ -4,101 +4,94 @@ class Api {
     this._headers = headers;
   }
 
-  _checkResponse(response, method) {
-    return response.ok
-      ? response.json()
-      : Promise.reject(`${method}: ${response.status}`);
+  _checkResponse(res) {
+    if (res.ok) {
+      return res.json();
+    } else {
+      return Promise.reject(`Ошибка: ${res.status}`);
+    }
   }
 
-  _request(url, options) {
-    return fetch(url, options).then(this._checkResponse)
-  }
-
-  getUserInfo() {
-    return fetch(`${this._baseUrl}/users/me`, { headers: this._headers, credentials: "include"}).then(
-      (res) => {
-        return this._checkResponse(res, "getUserInfo");
-      }
-    );
-  }
-
-  setAvatar(avatarURL) {
-    return fetch(`${this._baseUrl}/users/me/avatar`, {
+  async getUserInfo() {
+    const res = await fetch(`${this._baseUrl}/users/me`, {
+      method: "GET",
       headers: this._headers,
+      credentials: 'include',
+    })
+    return this._checkResponse(res);
+  }
+
+  async setAvatar(avatarURL) {
+    const res = await fetch(`${this._baseUrl}/users/me/avatar`, {
       method: "PATCH",
-      credentials: "include",
+      headers: this._headers,
+      credentials: 'include',
       body: JSON.stringify({
         avatar: avatarURL,
       }),
-    }).then((res) => {
-      return this._checkResponse(res, "setAvatar");
-    });
+    })
+    return this._checkResponse(res);
   }
 
-  setUserInfo(name, about) {
-    return fetch(`${this._baseUrl}/users/me`, {
-      headers: this._headers,
+  async setUserInfo(name, about) {
+    const res = await fetch(`${this._baseUrl}/users/me`, {
       method: "PATCH",
-      credentials: "include",
+      headers: this._headers,
+      credentials: 'include',
       body: JSON.stringify({
         name: name,
         about: about,
       }),
-    }).then((res) => {
-      return this._checkResponse(res, "setUserInfo");
     })
+    return this._checkResponse(res);
   }
 
-  getInitialCards() {
-    return fetch(`${this._baseUrl}/cards`, { headers: this._headers, credentials: "include"}).then(
-      (res) => {
-        return this._checkResponse(res, "getInitialCards");
-      }
-    );
+  async getInitialCards() {
+    const res = await fetch(`${this._baseUrl}/cards`, {
+      headers: this._headers,
+      credentials: 'include',
+    });
+    return this._checkResponse(res);
   }
 
-  changeLikeCardStatus(id, status) {
+  async changeLikeCardStatus(id, status) {
     if (status) {
-      return fetch(`${this._baseUrl}/cards/${id}/likes`, {
+      const res = await fetch(`${this._baseUrl}/cards/${id}/likes`, {
         method: "DELETE",
-        credentials: "include",
         headers: this._headers,
-      }).then((res) => {
-        return this._checkResponse(res, "removeLike");
-      });
+        credentials: 'include',
+      })
+      return this._checkResponse(res);
     } else {
-      return fetch(`${this._baseUrl}/cards/${id}/likes`, {
-        credentials: "include",
-        headers: this._headers,
+      const res = await fetch(`${this._baseUrl}/cards/${id}/likes`, {
         method: "PUT",
-      }).then((res) => {
-        return this._checkResponse(res, "addLike");
-      });
+        headers: this._headers,
+        credentials: 'include',
+      })
+      return this._checkResponse(res);
     }
   }
 
-  addCard(card) {
-    return fetch(`${this._baseUrl}/cards`, {
+  async addCard(card) {
+    const res = await fetch(`${this._baseUrl}/cards`, {
       method: "POST",
-      credentials: "include",
       headers: this._headers,
+      credentials: 'include',
       body: JSON.stringify({
         name: card.name,
         link: card.link,
       }),
-    }).then((res) => {
-      return this._checkResponse(res, "addCard");
-    });
+    })
+    return this._checkResponse(res);
   }
 
-  removeCard(id) {
-    return fetch(`${this._baseUrl}/cards/${id}`, {
+  async removeCard(id) {
+    const res = await fetch(`${this._baseUrl}/cards/${id}`, {
       method: "DELETE",
-      credentials: "include",
       headers: this._headers,
-    }).then((res) => {
-      return this._checkResponse(res, "removeCard");
-    });
+      credentials: 'include',
+    })
+    return this._checkResponse(res);
   }
 }
 

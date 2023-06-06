@@ -36,69 +36,93 @@ function App() {
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if(loggedIn === false) {
+      return;
+    }
+    api
+      .getInitialCards()
+      .then((res) => {
+        setCards(res);
+      })
+      .catch((e) => console.log(e));
+    api
+      .getUserInfo()
+      .then((res) => {
+        setCurrentUser(res);
+      })
+      .catch((e) => console.log(e));
+  }, [loggedIn]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      auth
+        .getToken(token)
+        .then((res) => {
+          if (res) {
+            setLoggedIn(true);
+            setEmail(res.email);
+          }
+        })
+        .catch((error) => {
+          console.log(`Ошибка ${error} при сохранении токена`);
+        });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (loggedIn === true) {
+      navigate("/");
+    }
+  }, [loggedIn, navigate]);
+
   function handleRegister(email, password) {
     auth.registerUser(email, password)
       .then(() => {
         navigate("/sign-in")
-        setPopupImage(resolve);
-        setPopupTitle("Вы успешно зарегистрировались!");
-        handleInfoTooltip();
+        setTimeout(() => {
+          setPopupImage(resolve);
+          setPopupTitle("Вы успешно зарегистрировались!");
+          handleInfoTooltip();
+        }, 2000);
       })
       .catch((err) => {
         console.log(err);
-        setPopupImage(reject);
-        setPopupTitle("Что-то пошло не так! Попробуйте ещё раз.");
-        handleInfoTooltip();
+        setTimeout(() => {
+          setPopupImage(reject);
+          setPopupTitle("Что-то пошло не так! Попробуйте ещё раз.");
+          handleInfoTooltip();
+        }, 2000);
       });
   }
 
   function handleLogin(email, password) {
     auth.loginUser(email, password)
       .then((res) => {
-        if (res) {
-          window.location.reload();
-          localStorage.setItem("token", res);
+          localStorage.setItem("token", res.token);
           setLoggedIn(true);
-          setPopupImage(resolve);
           setEmail(email);
           navigate("/")
-          setPopupTitle("Вы успешно авторизовались!");
-          handleInfoTooltip();
-        }
+          setTimeout(() => {
+            setPopupImage(resolve);
+            setPopupTitle("Вы успешно авторизовались!");
+            handleInfoTooltip();
+          }, 2000);
       })
       .catch((err) => {
         console.log(err);
-        setPopupImage(reject);
-        setPopupTitle("Что-то пошло не так! Попробуйте ещё раз.");
-        handleInfoTooltip();
+        setTimeout(() => {
+          setPopupImage(reject);
+          setPopupTitle("Что-то пошло не так! Попробуйте ещё раз.");
+          handleInfoTooltip();
+        }, 2000);
       });
   }
-
-  function tokenCheck() {
-    const token = localStorage.getItem("token")
-    if (token) {
-      auth.getToken(token)
-        .then((res) => {
-          if (res) {
-            setLoggedIn(true);
-            setEmail(res.email);
-            navigate("/");
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  }
-
-  useEffect(() => {
-    tokenCheck();
-  }, [loggedIn]);
 
   function signOut() {
     setLoggedIn(false);
     localStorage.removeItem('token');
-    window.location.reload();
   }
 
   const blurHandler = (e, paramsDirty, paramsError) => {
@@ -121,20 +145,7 @@ function App() {
   /**
   * Получение информации о пользователе и исходных карточек при открытии страницы
   */
-  useEffect(() => {
-    api
-      .getInitialCards()
-      .then((res) => {
-        setCards(res);
-      })
-      .catch((e) => console.log(e));
-    api
-      .getUserInfo()
-      .then((res) => {
-        setCurrentUser(res);
-      })
-      .catch((e) => console.log(e));
-  }, []);
+
 
   const handleEditProfileClick = () => {
     setIsEditProfilePopupOpen(true);
@@ -289,7 +300,7 @@ function App() {
                   title='Выйти'
                   email={email}
                   onClick={signOut}
-                  route=""
+                  route="/sign-in"
                 />
                 <ProtectedRoute
                   element={Main}

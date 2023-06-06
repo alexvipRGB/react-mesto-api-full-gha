@@ -1,15 +1,14 @@
 class Auth {
   constructor({ url, headers }) {
     this._url = url;
-    this._headers = headers;
   }
 
   _handleResponse(res) {
     if (res.ok) {
       return res.json();
+    } else {
+      return Promise.reject(`Ошибка: ${res.status}`);
     }
-
-    return Promise.reject(`Ошибка: ${res.status}`);
   }
 
   registerUser(email, password) {
@@ -17,6 +16,7 @@ class Auth {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+
       },
       body: JSON.stringify({ email, password }),
     })
@@ -26,32 +26,33 @@ class Auth {
   loginUser(email, password) {
     return fetch(`${this._url}/signin`, {
       method: 'POST',
-      credentials: "include",
       headers: {
-        'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify({ email, password }),
     })
       .then(this._handleResponse)
+      .then((data) => {
+        if (data) {
+          localStorage.setItem("token", data._id);
+          return data;
+        }
+      });;
   }
 
   getToken(token) {
     return fetch(`${this._url}/users/me`, {
       method: 'GET',
-      credentials: "include",
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
+      credentials: "include",
     })
       .then(this._handleResponse)
   }
 }
-
-
-
 const auth = new Auth({
   url: 'https://api.mesto.alex.nomoredomains.rocks',
 });
