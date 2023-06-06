@@ -17,7 +17,7 @@ const getUsers = async (req, res, next) => {
 
 const getUserById = async (req, res, next) => {
   try {
-    const user = await User.findByIdAndRemove(req.params.userId);
+    const user = await User.findById(req.params.userId);
     if (!user) {
       throw new NotFoundError('Пользователь не найден');
     }
@@ -118,7 +118,7 @@ const login = async (req, res, next) => {
 
 const getCurrentUser = async (req, res, next) => {
   try {
-    const user = await User.findByIdAndRemove(req.user._id);
+    const user = await User.findById(req.user._id);
     if (!user) {
       throw new NotFoundError('Пользователь не найден');
     }
