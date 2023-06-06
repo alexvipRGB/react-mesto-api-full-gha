@@ -105,6 +105,11 @@ const login = async (req, res, next) => {
       expiresIn: '7d',
     });
 
+    res.cookie('jwt', token, {
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
     res.send({ token });
   } catch (err) {
     next(err);
