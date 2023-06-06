@@ -1,3 +1,7 @@
-const jwtKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMzQ1Njc4OTAifQ._aG0ukzancZqhL1wvBTJh8G8d3Det5n0WKcPo5C0DCY';
+const { NODE_ENV } = process.env;
+const { JWT_SECRET } = process.env;
 
-module.exports = jwtKey;
+module.exports = {
+  NODE_ENV,
+  JWT_SECRET,
+};
