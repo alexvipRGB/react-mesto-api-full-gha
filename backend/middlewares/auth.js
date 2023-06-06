@@ -2,15 +2,13 @@ const jwt = require('jsonwebtoken');
 const UnauthorizedError = require('../errors/UnauthorizedError');
 const { NODE_ENV, JWT_SECRET } = require('../utils/secretKey');
 
-const auth = (req, res, next) => {
-  const { authorization } = req.headers;
-  const bearer = 'Bearer ';
+const authMiddleware = (req, res, next) => {
+  const token = req.cookies.jwt;
 
-  if (!authorization || !authorization.startsWith(bearer)) {
+  if (!token) {
     throw new UnauthorizedError('Необходима авторизация');
   }
 
-  const token = authorization.replace(bearer, '');
   let payload;
 
   try {
@@ -20,9 +18,7 @@ const auth = (req, res, next) => {
   }
 
   req.user = payload;
-  return next();
+  next();
 };
 
-module.exports = {
-  auth,
-};
+module.exports = authMiddleware;

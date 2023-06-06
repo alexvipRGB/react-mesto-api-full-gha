@@ -110,7 +110,7 @@ const login = async (req, res, next) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.send({ token });
+    res.send({ message: 'Успешная аутентификация' });
   } catch (err) {
     next(err);
   }
