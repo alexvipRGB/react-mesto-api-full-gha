@@ -4,7 +4,6 @@ const { NODE_ENV, JWT_SECRET } = require('../utils/secretKey');
 const User = require('../models/user');
 const ConflictError = require('../errors/ConflictError');
 const NotFoundError = require('../errors/NotFoundError');
-const UnauthorizedError = require('../errors/UnauthorizedError');
 
 const getUsers = async (req, res, next) => {
   try {
@@ -93,27 +92,15 @@ const updateUserAvatar = async (req, res, next) => {
 };
 
 const login = async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email }).select('+password');
-
-    if (!user || !bcrypt.compareSync(password, user.password)) {
-      throw new UnauthorizedError('Неправильная почта или пароль');
-    }
-
-    const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', {
-      expiresIn: '7d',
-    });
-
-    res.cookie('jwt', token, {
-      httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
-
-    res.send({ message: 'Успешная аутентификация' });
-  } catch (err) {
-    next(err);
-  }
+  const { email, password } = req.body;
+  return User.findUserByCredentials(email, password)
+    .then(({ _id: userId }) => {
+      if (userId) {
+        const token = jwt.sign({ userId }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
+        res.send({ token });
+      }
+    })
+    .catch(next);
 };
 
 const getCurrentUser = async (req, res, next) => {
