@@ -4,8 +4,8 @@ const ForbiddenError = require('../errors/ForbiddenError');
 
 const getCards = async (req, res, next) => {
   try {
-    Card.find({}).sort({ createdAt: -1 });
-    res.send(Card);
+    const cards = await Card.find({}).sort({ Card: -1 });
+    res.send(cards);
   } catch (err) {
     next(err);
   }
