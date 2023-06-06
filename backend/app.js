@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { errors } = require('celebrate');
@@ -7,6 +8,7 @@ const cookieParser = require('cookie-parser');
 const router = require('./routes/index');
 const validationErrors = require('./utils/validError');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const auth = require('./middlewares/auth');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -44,6 +46,7 @@ app.get('/crash-test', () => {
 });
 
 app.use(router);
+app.use(auth);
 app.use(errorLogger);
 
 app.use(validationErrors);
