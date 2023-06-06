@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { errors } = require('celebrate');
@@ -30,19 +31,17 @@ app.use(
 );
 app.use(helmet());
 
+app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(requestLogger);
-
-app.use(express.json());
 
 app.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
   }, 0);
 });
-
 app.use(router);
 app.use(auth);
 app.use(errorLogger);

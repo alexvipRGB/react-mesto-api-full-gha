@@ -106,11 +106,11 @@ const login = async (req, res, next) => {
     });
 
     res.cookie('jwt', token, {
+      maxAge: 3600000 * 24 * 7,
       httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      sameSite: true,
     });
-
-    res.send({ message: 'Успешная аутентификация' });
+    res.send(user.toJSON());
   } catch (err) {
     next(err);
   }

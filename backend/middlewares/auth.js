@@ -18,7 +18,7 @@ const authMiddleware = (req, res, next) => {
   }
 
   req.user = payload;
-  next();
+  return next();
 };
 
 module.exports = authMiddleware;
