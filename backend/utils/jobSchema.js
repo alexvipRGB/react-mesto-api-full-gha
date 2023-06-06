@@ -26,15 +26,6 @@ const cardValidation = {
       })
       .required(),
   }),
-  [Segments.PARAMS]: Joi.object().keys({
-    cardId: Joi.string().length(24).hex().messages({
-      'string.base': 'Поле "cardId" должно быть строкой',
-      'string.empty': 'Поле "cardId" должно быть заполнено',
-      'string.length': 'Поле "cardId" должно быть длиной 24 символа',
-      'string.hex':
-        'Поле "cardId" должно содержать только шестнадцатеричные символы',
-    }),
-  }),
 };
 
 const cardValidationId = {
@@ -49,16 +40,36 @@ const cardValidationId = {
   }),
 };
 
-const userValidation = {
+const userLoginValid = {
+  [Segments.BODY]: Joi.object({
+    email: Joi.string().email().required().messages({
+      'string.base': 'Поле "email" должно быть строкой',
+      'string.empty': 'Поле "email" должно быть заполнено',
+      'string.email': 'Некорректный Email',
+      'any.required': 'Поле "email" должно быть заполнено',
+    }),
+    password: Joi.string().min(8).required().messages({
+      'string.base': 'Поле "password" должно быть строкой',
+      'string.empty': 'Поле "password" должно быть заполнено',
+      'string.min': 'Минимальная длина поля "password" - 8',
+      'any.required': 'Поле "password" должно быть заполнено',
+    }),
+  }),
+};
+
+const userID = {
   [Segments.PARAMS]: Joi.object({
     userId: Joi.string().length(24).hex().messages({
       'string.base': 'Поле "userId" должно быть строкой',
       'string.empty': 'Поле "userId" должно быть заполнено',
       'string.length': 'Поле "userId" должно быть длиной 24 символа',
       'string.hex':
-        'Поле "userId" должно содержать только шестнадцатеричные символы',
+      'Поле "userId" должно содержать только шестнадцатеричные символы',
     }),
   }),
+};
+
+const userValidation = {
   [Segments.BODY]: Joi.object({
     name: Joi.string().min(2).max(30).messages({
       'string.base': 'Поле "name" должно быть строкой',
@@ -104,21 +115,28 @@ const userValidation = {
 
 const userUpdateValidation = {
   [Segments.BODY]: Joi.object({
-    name: Joi.string().min(2).max(30).messages({
-      'string.base': 'Поле "name" должно быть строкой',
-      'string.empty': 'Поле "name" должно быть заполнено',
-      'string.min': 'Минимальная длина поля "name" - 2',
-      'string.max': 'Максимальная длина поля "name" - 30',
-      'any.required': 'Поле "name" должно быть заполнено',
-    }),
-    about: Joi.string().min(2).max(30).messages({
-      'string.base': 'Поле "about" должно быть строкой',
-      'string.empty': 'Поле "about" должно быть заполнено',
-      'string.min': 'Минимальная длина поля "about" - 2',
-      'string.max': 'Максимальная длина поля "about" - 30',
-      'any.required': 'Поле "about" должно быть заполнено',
-    }),
-    avatar: Joi.string()
+    name: Joi.string().min(2).max(30).required()
+      .messages({
+        'string.base': 'Поле "name" должно быть строкой',
+        'string.empty': 'Поле "name" должно быть заполнено',
+        'string.min': 'Минимальная длина поля "name" - 2',
+        'string.max': 'Максимальная длина поля "name" - 30',
+        'any.required': 'Поле "name" должно быть заполнено',
+      }),
+    about: Joi.string().min(2).max(30).required()
+      .messages({
+        'string.base': 'Поле "about" должно быть строкой',
+        'string.empty': 'Поле "about" должно быть заполнено',
+        'string.min': 'Минимальная длина поля "about" - 2',
+        'string.max': 'Максимальная длина поля "about" - 30',
+        'any.required': 'Поле "about" должно быть заполнено',
+      }),
+  }),
+};
+
+const userAvatarValid = {
+  [Segments.BODY]: Joi.object({
+    avatar: Joi.string().required()
       .custom((value, helpers) => {
         if (!validUrl.isWebUri(value)) {
           return helpers.error('any.invalid');
@@ -139,4 +157,7 @@ module.exports = {
   userValidation,
   cardValidationId,
   userUpdateValidation,
+  userAvatarValid,
+  userLoginValid,
+  userID,
 };
