@@ -1,21 +1,19 @@
-const jwt = require('jsonwebtoken');
+const token = require('jsonwebtoken');
 require('dotenv').config();
 const UnauthorizedError = require('../errors/UnauthorizedError');
 const { NODE_ENV, JWT_SECRET } = require('../utils/secretKey');
 
-console.log(process.env.NODE_ENV);
-
 const authMiddleware = (req, res, next) => {
-  const token = req.cookies.jwt;
+  const { authorization } = req.headers;
 
   let payload;
-  if (!token) {
+  if (!authorization || !authorization.startsWith('Bearer ')) {
     throw new UnauthorizedError('Необходима авторизация');
   }
-
+  const jwt = authorization.replace('Bearer ', '');
   try {
-    payload = jwt.verify(
-      token,
+    payload = token.verify(
+      jwt,
       NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
     );
   } catch (err) {
@@ -23,7 +21,7 @@ const authMiddleware = (req, res, next) => {
   }
   req.user = payload;
 
-  next();
+  return next();
 };
 
 module.exports = authMiddleware;
