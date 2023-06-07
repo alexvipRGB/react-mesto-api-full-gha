@@ -2,6 +2,7 @@
   "name": "express-mesto-gha",
   "version": "1.0.0",
   "main": "app.js",
+  "homepage": "https://api.mesto.alex.nomoredomains.rocks",
   "scripts": {
     "lint": "npx eslint .",
     "start": "node app.js",

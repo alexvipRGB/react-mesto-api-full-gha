@@ -24,6 +24,7 @@ app.use(
       'http://localhost:3001',
       'http://alex.rgb.yandex.nomoredomains.rocks',
       'https://alex.rgb.yandex.nomoredomains.rocks',
+      'http://api.mesto.alex.nomoredomains.rocks',
       'https://api.mesto.alex.nomoredomains.rocks',
     ],
     credentials: true,
