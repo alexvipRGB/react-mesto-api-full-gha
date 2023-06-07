@@ -16,7 +16,7 @@ const {
   userValidation, userUpdateValidation, userLoginValid, userID, userAvatarValid,
 } = require('../utils/jobSchema');
 
-router.get('/crash-test', () => {
+router.get('/crash-test', auth, () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
   }, 0);
