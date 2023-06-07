@@ -5,8 +5,8 @@ const router = express.Router();
 const userRouter = require('./users');
 const cardRouter = require('./cards');
 
-router.use('/api', userRouter);
-router.use('/api', cardRouter);
+router.use(userRouter);
+router.use(cardRouter);
 router.use(() => {
   throw new NotFoundError('Маршрут не найден');
 });
