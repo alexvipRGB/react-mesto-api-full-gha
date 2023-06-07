@@ -6,6 +6,7 @@ const { errors } = require('celebrate');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
+const crashTest = require('./routes/crashTest');
 const router = require('./routes/index');
 const validationErrors = require('./utils/validError');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -33,11 +34,7 @@ app.use(
   }),
 );
 
-app.use('/crash-test', () => {
-  setTimeout(() => {
-    throw new Error('Сервер сейчас упадёт');
-  }, 0);
-});
+app.use(crashTest);
 
 app.use(helmet());
 
@@ -48,7 +45,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(requestLogger);
 
 app.use(bodyParser.json());
-app.use('/', router);
+app.use(router);
 app.use(auth);
 app.use(errorLogger);
 

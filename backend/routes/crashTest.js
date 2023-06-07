@@ -1,7 +1,7 @@
-const crashTest = require('express').Router();
+const express = require('express');
 
-// crashTest
-crashTest.get('/', () => {
+const crashTest = express.Router();
+crashTest.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
   }, 0);
