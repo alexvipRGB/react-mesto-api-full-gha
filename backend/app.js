@@ -30,7 +30,7 @@ app.use(
   }),
 );
 
-app.get('/crash-test', () => {
+app.use('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
   }, 0);
