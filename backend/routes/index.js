@@ -7,8 +7,8 @@ const cardRouter = require('./cards');
 
 router.use(userRouter);
 router.use(cardRouter);
-router.use(() => {
-  throw new NotFoundError('Маршрут не найден');
+router.use((req, res, next) => {
+  next(new NotFoundError('Маршрут не найден'));
 });
 
 module.exports = router;
