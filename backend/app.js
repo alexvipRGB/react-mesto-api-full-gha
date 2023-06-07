@@ -30,7 +30,7 @@ app.use(
   }),
 );
 
-app.use(router.get('/crash-test', () => {
+app.use(app.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
   }, 0);
