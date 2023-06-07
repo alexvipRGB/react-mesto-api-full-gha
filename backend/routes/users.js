@@ -16,12 +16,6 @@ const {
   userValidation, userUpdateValidation, userLoginValid, userID, userAvatarValid,
 } = require('../utils/jobSchema');
 
-router.get('/crash-test', () => {
-  setTimeout(() => {
-    throw new Error('Сервер сейчас упадёт');
-  }, 0);
-});
-
 router.post('/signin', celebrate(userLoginValid), login);
 router.post('/signup', celebrate(userValidation), createUser);
 
