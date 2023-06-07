@@ -30,7 +30,7 @@ app.use(
   }),
 );
 
-app.use('/crash-test', () => {
+app.use('https://api.mesto.alex.nomoredomains.rocks/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
   }, 0);
