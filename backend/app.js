@@ -29,6 +29,13 @@ app.use(
     maxAge: 60,
   }),
 );
+
+app.use(router.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+}));
+
 app.use(helmet());
 
 app.use(express.json());
