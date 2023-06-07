@@ -24,13 +24,14 @@ app.use(
       'http://localhost:3001',
       'http://alex.rgb.yandex.nomoredomains.rocks',
       'https://alex.rgb.yandex.nomoredomains.rocks',
+      'https://api.mesto.alex.nomoredomains.rocks',
     ],
     credentials: true,
     maxAge: 60,
   }),
 );
 
-app.use('https://api.mesto.alex.nomoredomains.rocks/crash-test', () => {
+app.use('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
   }, 0);
